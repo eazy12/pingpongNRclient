@@ -1,0 +1,13 @@
+D:\Dev\Study\pong\Pingpong\bin\Debug\Pingpong.exe.config
+D:\Dev\Study\pong\Pingpong\bin\Debug\Pingpong.exe
+D:\Dev\Study\pong\Pingpong\bin\Debug\Pingpong.pdb
+D:\Dev\Study\pong\Pingpong\obj\Debug\Pingpong.csprojResolveAssemblyReference.cache
+D:\Dev\Study\pong\Pingpong\obj\Debug\Pingpong.Form1.resources
+D:\Dev\Study\pong\Pingpong\obj\Debug\Pingpong.Properties.Resources.resources
+D:\Dev\Study\pong\Pingpong\obj\Debug\Pingpong.SettingsForm.resources
+D:\Dev\Study\pong\Pingpong\obj\Debug\Pingpong.csproj.GenerateResource.Cache
+D:\Dev\Study\pong\Pingpong\obj\Debug\Pingpong.exe
+D:\Dev\Study\pong\Pingpong\obj\Debug\Pingpong.pdb
+C:\Users\ilmir\Source\Repos\pingpongNRclient\Pingpong\bin\Debug\Pingpong.exe.config
+C:\Users\ilmir\Source\Repos\pingpongNRclient\Pingpong\obj\Debug\Pingpong.exe
+C:\Users\ilmir\Source\Repos\pingpongNRclient\Pingpong\obj\Debug\Pingpong.pdb
