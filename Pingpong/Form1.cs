@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Remoting.Channels;
+using System.Runtime.Remoting.Channels.Tcp;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -9,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Pingpong.Properties;
+using gamelogic;
 
 namespace Pingpong
 {
@@ -18,8 +21,19 @@ namespace Pingpong
         {
             InitializeComponent();
             this.KeyPreview = true;
-        }
+            Dictionary<string, string> pro = new Dictionary<string, string>();
+            pro["name"] = "TCP Channel Binary";
+            pro["priority"] = "17";
+            pro["port"] = "8086";
+            BinaryClientFormatterSinkProvider snkPrvd2 = new BinaryClientFormatterSinkProvider();
+            TcpClientChannel Channel = new TcpClientChannel(pro, snkPrvd2);
 
+            ChannelServices.RegisterChannel(Channel, false);
+            Game obj_1 = (Game)Activator.GetObject(typeof(Game), "tcp://localhost:8086/Game");
+            Player p = obj_1.Connect();
+           
+        }
+        
         PictureBox[] Score_Player = new PictureBox[5];  
         PictureBox[] Score_Enemy = new PictureBox[5];   
         Color ScoreColor = Color.Silver;                //Just to set the background color of the scoreboxes
@@ -61,6 +75,7 @@ namespace Pingpong
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
+            return;
             switch (e.KeyCode)      //Regular key input, if press the right keys it moves in its direction
             {
                 case Keys.W:
@@ -75,7 +90,7 @@ namespace Pingpong
                     break;
                 case Keys.Space:    //If hit space it starts the game,
                     GameOn = true;
-                    RandomStart(BallGoingLeft);
+                    ///RandomStart(BallGoingLeft);
                     label_Start.Visible = false;
                     break;
             }
@@ -98,10 +113,11 @@ namespace Pingpong
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            return;
             for (int i = 0; i < 5; i++)
             {
-                Score_Player[i] = PicID(i + 1);         //Adds the "score" pictureboxes to an array each
-                Score_Enemy[i] = PicID(i + 1, true);
+                //Score_Player[i] = PicID(i + 1);         //Adds the "score" pictureboxes to an array each
+                //Score_Enemy[i] = PicID(i + 1, true);
             }
             CircleThis(pb_Ball); 
             pb_Ball.Location = new Point(208, rng.Next(10, 190));   // Moves the ball in place
@@ -138,14 +154,15 @@ namespace Pingpong
         {
             for (int i = 0; i <= 5; i++)
             {   //Resets all the score boxes to their original color
-                PicID(i).BackColor = ScoreColor;
-                PicID(i, true).BackColor = ScoreColor;
+                //PicID(i).BackColor = ScoreColor;
+                //PicID(i, true).BackColor = ScoreColor;
             }
         }  
 
         //delete
         private void timer_Enemy_Tick(object sender, EventArgs e)
         {
+            return;
             if (GameOn) //Timer to move the Enemy
             {   //Always tries to be in the middle
                 if (pb_Enemy.Location.Y + 28 < pb_Ball.Location.Y)
@@ -161,12 +178,14 @@ namespace Pingpong
 
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            return;
             SettingsForm sF = new SettingsForm();
             sF.Show();
         }
 
         private void timer_Sec_Tick(object sender, EventArgs e)
         {
+            return;
             if (GameOn)
             {
                 Round++;
@@ -178,5 +197,13 @@ namespace Pingpong
                 label_Time.Text = "Time: " + str;
             }
         }
+
+
+        private void timer_Moveball_Tick(object sender, EventArgs e)
+        {
+
+        }
+
+
     }
 }
