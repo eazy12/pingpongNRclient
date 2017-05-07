@@ -32,7 +32,7 @@ namespace Pingpong
             //ChannelServices.RegisterChannel(Channel, true);
 
             RemotingConfiguration.Configure("Pingpong.exe.config", false);
-            Game game = new Game();
+            game = new Game();
             //Game game = (Game)Activator.GetObject(typeof(Game), "tcp://localhost:8086/Game");
             Player p = game.Connect();
 
@@ -52,6 +52,7 @@ namespace Pingpong
         Boolean Player_Up, Player_Down = false;         //Booleans to see if player is going up or down
         Boolean BallGoingLeft = false;                   //Is the ball going left or right?
         Boolean GameOn = false;                         //Is the game on or paused
+        Game game;
 
         int Speed_Player;                           //Dont change these, change them from the settings page
         int Speed_Enemy;                            
@@ -86,6 +87,7 @@ namespace Pingpong
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
+            game.changePosition();
             return;
             switch (e.KeyCode)      //Regular key input, if press the right keys it moves in its direction
             {
