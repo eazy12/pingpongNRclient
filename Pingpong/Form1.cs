@@ -28,12 +28,19 @@ namespace Pingpong
             BinaryClientFormatterSinkProvider snkPrvd2 = new BinaryClientFormatterSinkProvider();
             TcpClientChannel Channel = new TcpClientChannel(pro, snkPrvd2);
 
-            ChannelServices.RegisterChannel(Channel, false);
-            Game obj_1 = (Game)Activator.GetObject(typeof(Game), "tcp://localhost:8086/Game");
-            Player p = obj_1.Connect();
-           
+            ChannelServices.RegisterChannel(Channel, true);
+            Game game = (Game)Activator.GetObject(typeof(Game), "tcp://localhost:8086/Game");
+            Player p = game.Connect();
+
+            game.UpdateInfoHandle += new UpdateInfoEvent(onUpdateInfo);
         }
-        
+
+        private void onUpdateInfo(UpdateInfo updateInfo)
+        {
+            Console.WriteLine(updateInfo.getS());
+        }
+
+
         PictureBox[] Score_Player = new PictureBox[5];  
         PictureBox[] Score_Enemy = new PictureBox[5];   
         Color ScoreColor = Color.Silver;                //Just to set the background color of the scoreboxes
