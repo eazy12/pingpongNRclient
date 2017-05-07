@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
 using System.Data;
@@ -21,15 +22,18 @@ namespace Pingpong
         {
             InitializeComponent();
             this.KeyPreview = true;
-            Dictionary<string, string> pro = new Dictionary<string, string>();
-            pro["name"] = "TCP Channel Binary";
-            pro["priority"] = "17";
-            pro["port"] = "8086";
-            BinaryClientFormatterSinkProvider snkPrvd2 = new BinaryClientFormatterSinkProvider();
-            TcpClientChannel Channel = new TcpClientChannel(pro, snkPrvd2);
+            //Dictionary<string, string> pro = new Dictionary<string, string>();
+            //pro["name"] = "TCP Channel Binary";
+            //pro["priority"] = "17";
+            //pro["port"] = "8086";
+            //BinaryClientFormatterSinkProvider snkPrvd2 = new BinaryClientFormatterSinkProvider();
+            //TcpClientChannel Channel = new TcpClientChannel(pro, snkPrvd2);
 
-            ChannelServices.RegisterChannel(Channel, true);
-            Game game = (Game)Activator.GetObject(typeof(Game), "tcp://localhost:8086/Game");
+            //ChannelServices.RegisterChannel(Channel, true);
+
+            RemotingConfiguration.Configure("Pingpong.exe.config", false);
+            Game game = new Game();
+            //Game game = (Game)Activator.GetObject(typeof(Game), "tcp://localhost:8086/Game");
             Player p = game.Connect();
 
             game.UpdateInfoHandle += new UpdateInfoEvent(onUpdateInfo);

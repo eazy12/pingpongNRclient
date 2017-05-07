@@ -1,8 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Pingpong"
+    "\\Pingpong",
+    "\\Pingpong\\bin\\Debug",
+    "\\Pingpong\\obj\\Debug"
   ],
-  "SelectedNode": "\\Pingpong\\Form1.Designer.cs",
+  "SelectedNode": "\\Pingpong\\Form1.cs",
   "PreviewInSolutionExplorer": false
 }

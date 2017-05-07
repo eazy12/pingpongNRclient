@@ -30,3 +30,5 @@ C:\Users\ilmir\Source\Repos\pingpongNRclient\Pingpong\obj\Debug\Pingpong.Setting
 C:\Users\ilmir\Source\Repos\pingpongNRclient\Pingpong\obj\Debug\Pingpong.csproj.GenerateResource.Cache
 C:\Users\ilmir\Source\Repos\pingpongNRclient\Pingpong\bin\Debug\gamelogic.dll
 C:\Users\ilmir\Source\Repos\pingpongNRclient\Pingpong\bin\Debug\gamelogic.pdb
+C:\Users\WorstOne\Source\Repos\pingpongNRclient\Pingpong\bin\Debug\gamelogic.dll
+C:\Users\WorstOne\Source\Repos\pingpongNRclient\Pingpong\bin\Debug\gamelogic.pdb
