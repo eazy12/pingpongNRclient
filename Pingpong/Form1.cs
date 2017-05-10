@@ -18,6 +18,9 @@ namespace Pingpong
 {
     public partial class Form1 : Form
     {
+        Game game;
+        Player player;
+
         public Form1()
         {
             InitializeComponent();
@@ -34,14 +37,14 @@ namespace Pingpong
             RemotingConfiguration.Configure("Pingpong.exe.config", false);
             game = new Game();
             //Game game = (Game)Activator.GetObject(typeof(Game), "tcp://localhost:8086/Game");
-            Player p = game.Connect();
+            player = game.Connect();
 
             game.UpdateInfoHandle += new UpdateInfoEvent(onUpdateInfo);
         }
 
         private void onUpdateInfo(UpdateInfo updateInfo)
         {
-            Console.WriteLine(updateInfo.getS());
+            pb_Player.Location = new Point(player.X, player.Y);
         }
 
 
@@ -52,7 +55,7 @@ namespace Pingpong
         Boolean Player_Up, Player_Down = false;         //Booleans to see if player is going up or down
         Boolean BallGoingLeft = false;                   //Is the ball going left or right?
         Boolean GameOn = false;                         //Is the game on or paused
-        Game game;
+        
 
         int Speed_Player;                           //Dont change these, change them from the settings page
         int Speed_Enemy;                            
@@ -87,24 +90,20 @@ namespace Pingpong
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            game.changePosition();
-            return;
             switch (e.KeyCode)      //Regular key input, if press the right keys it moves in its direction
             {
                 case Keys.W:
                 case Keys.Up:
-                    Player_Down = false;
-                    Player_Up = true;
+                    player.changePosition("up");
                     break;
                 case Keys.S:
                 case Keys.Down:
-                    Player_Up = false;
-                    Player_Down = true;
+                    player.changePosition("down");
                     break;
                 case Keys.Space:    //If hit space it starts the game,
-                    GameOn = true;
+                    //GameOn = true;
                     ///RandomStart(BallGoingLeft);
-                    label_Start.Visible = false;
+                    //label_Start.Visible = false;
                     break;
             }
         }
