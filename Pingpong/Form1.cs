@@ -38,13 +38,18 @@ namespace Pingpong
             game = new Game();
             //Game game = (Game)Activator.GetObject(typeof(Game), "tcp://localhost:8086/Game");
             player = game.Connect();
+            Player player2 = game.Connect();
 
             game.UpdateInfoHandle += new UpdateInfoEvent(onUpdateInfo);
         }
 
         private void onUpdateInfo(UpdateInfo updateInfo)
         {
-            pb_Player.Location = new Point(player.X, player.Y);
+            if (pb_Player.InvokeRequired)
+            {
+                pb_Player.Invoke(new MethodInvoker(delegate { pb_Player.Location = new Point(player.X, player.Y); }));
+            }
+           
         }
 
 
@@ -94,16 +99,14 @@ namespace Pingpong
             {
                 case Keys.W:
                 case Keys.Up:
-                    player.changePosition("up");
+                    player.ChangePosition("up");
                     break;
                 case Keys.S:
                 case Keys.Down:
-                    player.changePosition("down");
+                    player.ChangePosition("down");
                     break;
                 case Keys.Space:    //If hit space it starts the game,
-                    //GameOn = true;
-                    ///RandomStart(BallGoingLeft);
-                    //label_Start.Visible = false;
+                    game.SetStatus("playing");
                     break;
             }
         }
@@ -125,6 +128,8 @@ namespace Pingpong
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            pb_Ball.Location = new Point(game.Ball.X, game.Ball.Y);
+
             return;
             for (int i = 0; i < 5; i++)
             {
