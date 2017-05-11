@@ -36,8 +36,9 @@
     <ApplicationIcon>Hydeen.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="gamelogic">
-      <HintPath>..\..\pingpongNRremotefile\gamelogic\gamelogic\bin\Debug\gamelogic.dll</HintPath>
+    <Reference Include="gamelogic, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Repos\pingpongNRremotefile\gamelogic\gamelogic\bin\Debug\gamelogic.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

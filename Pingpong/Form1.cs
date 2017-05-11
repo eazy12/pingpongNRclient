@@ -36,7 +36,7 @@ namespace Pingpong
 
             RemotingConfiguration.Configure("Pingpong.exe.config", false);
             game = new Game();
-            //Game game = (Game)Activator.GetObject(typeof(Game), "tcp://localhost:8086/Game");
+            //game = (Game)Activator.GetObject(typeof(Game), "tcp://localhost:8086/Game");
             player = game.Connect();
             Player player2 = game.Connect();
 
@@ -49,7 +49,12 @@ namespace Pingpong
             {
                 pb_Player.Invoke(new MethodInvoker(delegate { pb_Player.Location = new Point(player.X, player.Y); }));
             }
-           
+            if (pb_Ball.InvokeRequired)
+            {
+                pb_Ball.Invoke(new MethodInvoker(delegate { pb_Ball.Location = new Point(game.Ball.X, game.Ball.Y); }));
+            }
+
+
         }
 
 
@@ -68,8 +73,6 @@ namespace Pingpong
         int BallForce;
         int Round = 0;
 
-       
-
         public void PaintBox(int X, int Y, int W, int H, Color C)
         {
             PictureBox Temp = new PictureBox();
@@ -78,12 +81,6 @@ namespace Pingpong
             Temp.Location = new Point(X, Y);
             WorldFrame.Controls.Add(Temp);
         }
-
-     
-
-        
-
-       
 
         public void CircleThis(PictureBox pic)  //Just a function to redraw the ball into a circle.
         {
@@ -111,6 +108,7 @@ namespace Pingpong
             }
         }
 
+        // Возможно ненужный код
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
             switch (e.KeyCode)

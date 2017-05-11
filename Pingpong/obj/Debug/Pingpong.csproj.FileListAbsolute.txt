@@ -32,3 +32,15 @@ C:\Users\ilmir\Source\Repos\pingpongNRclient\Pingpong\bin\Debug\gamelogic.dll
 C:\Users\ilmir\Source\Repos\pingpongNRclient\Pingpong\bin\Debug\gamelogic.pdb
 C:\Users\WorstOne\Source\Repos\pingpongNRclient\Pingpong\bin\Debug\gamelogic.dll
 C:\Users\WorstOne\Source\Repos\pingpongNRclient\Pingpong\bin\Debug\gamelogic.pdb
+C:\Users\WorstOne\Source\theonlyoneclient\pingpongNRclient\Pingpong\bin\Debug\Pingpong.exe.config
+C:\Users\WorstOne\Source\theonlyoneclient\pingpongNRclient\Pingpong\obj\Debug\Pingpong.exe
+C:\Users\WorstOne\Source\theonlyoneclient\pingpongNRclient\Pingpong\obj\Debug\Pingpong.pdb
+C:\Users\WorstOne\Source\theonlyoneclient\pingpongNRclient\Pingpong\bin\Debug\Pingpong.exe
+C:\Users\WorstOne\Source\theonlyoneclient\pingpongNRclient\Pingpong\bin\Debug\Pingpong.pdb
+C:\Users\WorstOne\Source\theonlyoneclient\pingpongNRclient\Pingpong\bin\Debug\gamelogic.pdb
+C:\Users\WorstOne\Source\theonlyoneclient\pingpongNRclient\Pingpong\obj\Debug\Pingpong.csprojResolveAssemblyReference.cache
+C:\Users\WorstOne\Source\theonlyoneclient\pingpongNRclient\Pingpong\obj\Debug\Pingpong.Form1.resources
+C:\Users\WorstOne\Source\theonlyoneclient\pingpongNRclient\Pingpong\obj\Debug\Pingpong.Properties.Resources.resources
+C:\Users\WorstOne\Source\theonlyoneclient\pingpongNRclient\Pingpong\obj\Debug\Pingpong.SettingsForm.resources
+C:\Users\WorstOne\Source\theonlyoneclient\pingpongNRclient\Pingpong\obj\Debug\Pingpong.csproj.GenerateResource.Cache
+C:\Users\WorstOne\Source\theonlyoneclient\pingpongNRclient\Pingpong\bin\Debug\gamelogic.dll
