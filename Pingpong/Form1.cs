@@ -20,6 +20,7 @@ namespace Pingpong
     {
         Game game;
         Player player;
+        Player player2;
 
         public Form1()
         {
@@ -38,7 +39,7 @@ namespace Pingpong
             game = new Game();
             //Game game = (Game)Activator.GetObject(typeof(Game), "tcp://localhost:8086/Game");
             player = game.Connect();
-            Player player2 = game.Connect();
+            player2 = game.Connect();
 
             game.UpdateInfoHandle += new UpdateInfoEvent(onUpdateInfo);
         }
@@ -49,7 +50,11 @@ namespace Pingpong
             {
                 pb_Player.Invoke(new MethodInvoker(delegate { pb_Player.Location = new Point(player.X, player.Y); }));
             }
-           
+            if (pb_Enemy.InvokeRequired)
+            {
+                pb_Enemy.Invoke(new MethodInvoker(delegate { pb_Enemy.Location = new Point(player2.X, player2.Y); }));
+            }
+
         }
 
 
@@ -97,13 +102,17 @@ namespace Pingpong
         {
             switch (e.KeyCode)      //Regular key input, if press the right keys it moves in its direction
             {
-                case Keys.W:
                 case Keys.Up:
                     player.ChangePosition("up");
                     break;
-                case Keys.S:
                 case Keys.Down:
                     player.ChangePosition("down");
+                    break;
+                case Keys.W:
+                    player2.ChangePosition("up");
+                    break;
+                case Keys.S:
+                    player2.ChangePosition("down");
                     break;
                 case Keys.Space:    //If hit space it starts the game,
                     game.SetStatus("playing");
