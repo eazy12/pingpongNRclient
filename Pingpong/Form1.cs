@@ -54,7 +54,10 @@ namespace Pingpong
             {
                 pb_Enemy.Invoke(new MethodInvoker(delegate { pb_Enemy.Location = new Point(player2.X, player2.Y); }));
             }
-
+            if (pb_Ball.InvokeRequired)
+            {
+                pb_Ball.Invoke(new MethodInvoker(delegate { pb_Ball.Location = new Point(game.Ball.X, game.Ball.Y); }));
+            }
         }
 
 
