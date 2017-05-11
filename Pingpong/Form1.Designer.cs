@@ -77,7 +77,7 @@
             this.WorldFrame.Dock = System.Windows.Forms.DockStyle.Top;
             this.WorldFrame.Location = new System.Drawing.Point(0, 0);
             this.WorldFrame.Name = "WorldFrame";
-            this.WorldFrame.Size = new System.Drawing.Size(427, 209);
+            this.WorldFrame.Size = new System.Drawing.Size(450, 200);
             this.WorldFrame.TabIndex = 0;
             // 
             // timer_Moveball

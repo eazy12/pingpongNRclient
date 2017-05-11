@@ -20,6 +20,7 @@ namespace Pingpong
     {
         Game game;
         Player player;
+        Player player2;
 
         public Form1()
         {
@@ -36,9 +37,9 @@ namespace Pingpong
 
             RemotingConfiguration.Configure("Pingpong.exe.config", false);
             game = new Game();
-            //game = (Game)Activator.GetObject(typeof(Game), "tcp://localhost:8086/Game");
+            //Game game = (Game)Activator.GetObject(typeof(Game), "tcp://localhost:8086/Game");
             player = game.Connect();
-            Player player2 = game.Connect();
+            player2 = game.Connect();
 
             game.UpdateInfoHandle += new UpdateInfoEvent(onUpdateInfo);
         }
@@ -49,12 +50,14 @@ namespace Pingpong
             {
                 pb_Player.Invoke(new MethodInvoker(delegate { pb_Player.Location = new Point(player.X, player.Y); }));
             }
+            if (pb_Enemy.InvokeRequired)
+            {
+                pb_Enemy.Invoke(new MethodInvoker(delegate { pb_Enemy.Location = new Point(player2.X, player2.Y); }));
+            }
             if (pb_Ball.InvokeRequired)
             {
                 pb_Ball.Invoke(new MethodInvoker(delegate { pb_Ball.Location = new Point(game.Ball.X, game.Ball.Y); }));
             }
-
-
         }
 
 
@@ -73,6 +76,8 @@ namespace Pingpong
         int BallForce;
         int Round = 0;
 
+       
+
         public void PaintBox(int X, int Y, int W, int H, Color C)
         {
             PictureBox Temp = new PictureBox();
@@ -81,6 +86,12 @@ namespace Pingpong
             Temp.Location = new Point(X, Y);
             WorldFrame.Controls.Add(Temp);
         }
+
+     
+
+        
+
+       
 
         public void CircleThis(PictureBox pic)  //Just a function to redraw the ball into a circle.
         {
@@ -94,13 +105,17 @@ namespace Pingpong
         {
             switch (e.KeyCode)      //Regular key input, if press the right keys it moves in its direction
             {
-                case Keys.W:
                 case Keys.Up:
                     player.ChangePosition("up");
                     break;
-                case Keys.S:
                 case Keys.Down:
                     player.ChangePosition("down");
+                    break;
+                case Keys.W:
+                    player2.ChangePosition("up");
+                    break;
+                case Keys.S:
+                    player2.ChangePosition("down");
                     break;
                 case Keys.Space:    //If hit space it starts the game,
                     game.SetStatus("playing");
@@ -108,7 +123,6 @@ namespace Pingpong
             }
         }
 
-        // Возможно ненужный код
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
             switch (e.KeyCode)
