@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
+using System.Runtime.Remoting.Channels.Ipc;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -12,32 +13,37 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Pingpong.Properties;
+using System.Runtime.Serialization.Formatters;
 using gamelogic;
+using System.Runtime.Remoting.Channels.Http;
+using System.Runtime.Remoting.Lifetime;
 
 namespace Pingpong
 {
     public partial class Form1 : Form
     {
-        Game game;
+        
         Player player;
         Player player2;
+        Game game;
 
         public Form1()
         {
             InitializeComponent();
             this.KeyPreview = true;
             //Dictionary<string, string> pro = new Dictionary<string, string>();
-            //pro["name"] = "TCP Channel Binary";
+            //pro["name"] = "TCP Channel Binary KEK";
             //pro["priority"] = "17";
-            //pro["port"] = "8086";
+            //pro["port"] = "9000";
             //BinaryClientFormatterSinkProvider snkPrvd2 = new BinaryClientFormatterSinkProvider();
+            ////snkPrvd2.TypeFilterLevel = TypeFilterLevel.Full;
             //TcpClientChannel Channel = new TcpClientChannel(pro, snkPrvd2);
+            //ChannelServices.RegisterChannel(Channel, false);
 
-            //ChannelServices.RegisterChannel(Channel, true);
-
+            
             RemotingConfiguration.Configure("Pingpong.exe.config", false);
             game = new Game();
-            //Game game = (Game)Activator.GetObject(typeof(Game), "tcp://localhost:8086/Game");
+            //game = (Game)Activator.GetObject(typeof(Game), "tcp://localhost:9000/Game/Gameee");
             player = game.Connect();
             player2 = game.Connect();
 
@@ -60,43 +66,24 @@ namespace Pingpong
             }
         }
 
-
+        // Это, вроде, для очков
         PictureBox[] Score_Player = new PictureBox[5];  
         PictureBox[] Score_Enemy = new PictureBox[5];   
-        Color ScoreColor = Color.Silver;                //Just to set the background color of the scoreboxes
-        Random rng = new Random();                      //If you change this, change it from the design page too
-        Boolean Player_Up, Player_Down = false;         //Booleans to see if player is going up or down
-        Boolean BallGoingLeft = false;                   //Is the ball going left or right?
-        Boolean GameOn = false;                         //Is the game on or paused
-        
-
-        int Speed_Player;                           //Dont change these, change them from the settings page
-        int Speed_Enemy;                            
-        int BallSpeed;
-        int BallForce;
-        int Round = 0;
-
-       
+        Color ScoreColor = Color.Silver;
 
         public void PaintBox(int X, int Y, int W, int H, Color C)
         {
-            PictureBox Temp = new PictureBox();
-            Temp.BackColor = C;
-            Temp.Size = new Size(W, H);
-            Temp.Location = new Point(X, Y);
-            WorldFrame.Controls.Add(Temp);
+            //PictureBox Temp = new PictureBox();
+            //Temp.BackColor = C;
+            //Temp.Size = new Size(W, H);
+            //Temp.Location = new Point(X-W/2, Y-H/2);
+            //WorldFrame.Controls.Add(Temp);
         }
 
-     
-
-        
-
-       
-
-        public void CircleThis(PictureBox pic)  //Just a function to redraw the ball into a circle.
+        public void CircleThis(PictureBox pic)
         {
             System.Drawing.Drawing2D.GraphicsPath gp = new System.Drawing.Drawing2D.GraphicsPath();
-            gp.AddEllipse(0, 0, pic.Width - 3, pic.Height - 3);
+            gp.AddEllipse(pic.Width/2, pic.Height/2, pic.Width, pic.Height);
             Region rg = new Region(gp);
             pic.Region = rg;
         }
@@ -125,35 +112,14 @@ namespace Pingpong
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
-            switch (e.KeyCode)
-            {
-                case Keys.W:
-                case Keys.Up:
-                    Player_Up = false;
-                    break;
-                case Keys.S:
-                case Keys.Down:
-                    Player_Down = false;
-                    break;
-            }
+            
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             pb_Ball.Location = new Point(game.Ball.X, game.Ball.Y);
-
-            return;
-            for (int i = 0; i < 5; i++)
-            {
-                //Score_Player[i] = PicID(i + 1);         //Adds the "score" pictureboxes to an array each
-                //Score_Enemy[i] = PicID(i + 1, true);
-            }
-            CircleThis(pb_Ball); 
-            pb_Ball.Location = new Point(208, rng.Next(10, 190));   // Moves the ball in place
-
-            BallGoingLeft = Convert.ToBoolean(rng.Next(0, 1));
-
-        }  
+            //CircleThis(pb_Ball);
+        }
 
         public void AddScore(PictureBox[] Arr)
         {
@@ -168,13 +134,13 @@ namespace Pingpong
 
             if (Arr[4].BackColor == Color.Black)
             {   //If they all are black, game ends.
-                GameOn = false;
+                
                 label_Start.Visible = true;
                 RestoreScore();
-                pb_Ball.Location = new Point(208, rng.Next(10, 190));
-                pb_Player.Location = new Point(3, 67);
+                pb_Ball.Location = new Point(208, 80);
+                pb_Player.Location = new Point(8, 67);
                 pb_Enemy.Location = new Point(409, 67);
-                Round = 0;
+                
                 label_Time.Visible = false;
             }
         }
@@ -192,17 +158,7 @@ namespace Pingpong
         private void timer_Enemy_Tick(object sender, EventArgs e)
         {
             return;
-            if (GameOn) //Timer to move the Enemy
-            {   //Always tries to be in the middle
-                if (pb_Enemy.Location.Y + 28 < pb_Ball.Location.Y)
-                {   //Which is around 28 pixels below its Y coordinate
-                    pb_Enemy.Top += Speed_Enemy;
-                }
-                else
-                {
-                    pb_Enemy.Top -= Speed_Enemy;
-                }
-            }
+            
         }
 
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -215,16 +171,16 @@ namespace Pingpong
         private void timer_Sec_Tick(object sender, EventArgs e)
         {
             return;
-            if (GameOn)
-            {
-                Round++;
-                label_Time.Visible = true;
+            //if (GameOn)
+            //{
+            //    Round++;
+            //    label_Time.Visible = true;
 
-                TimeSpan time = TimeSpan.FromSeconds(Round);
+            //    TimeSpan time = TimeSpan.FromSeconds(Round);
 
-                string str = time.ToString(@"mm\:ss");
-                label_Time.Text = "Time: " + str;
-            }
+            //    string str = time.ToString(@"mm\:ss");
+            //    label_Time.Text = "Time: " + str;
+            //}
         }
 
 
