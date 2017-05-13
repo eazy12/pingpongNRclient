@@ -66,7 +66,7 @@
             this.pb_Ball.Location = new System.Drawing.Point(555, 215);
             this.pb_Ball.Margin = new System.Windows.Forms.Padding(8, 7, 8, 7);
             this.pb_Ball.Name = "pb_Ball";
-            this.pb_Ball.Size = new System.Drawing.Size(37, 38);
+            this.pb_Ball.Size = new System.Drawing.Size(40, 40);
             this.pb_Ball.TabIndex = 2;
             this.pb_Ball.TabStop = false;
             // 

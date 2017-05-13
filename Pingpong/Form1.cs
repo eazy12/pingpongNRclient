@@ -64,6 +64,13 @@ namespace Pingpong
             {
                 pb_Ball.Invoke(new MethodInvoker(delegate { pb_Ball.Location = new Point(game.Ball.X, game.Ball.Y); }));
             }
+            if (InvokeRequired)
+            {
+                Invoke(new MethodInvoker(delegate {
+                    Text = String.Format("Ping Pong score: {0} - {1}", player.Score, player2.Score);
+                }));
+            }
+
         }
 
         public void PaintBox(int X, int Y, int W, int H, Color C)
@@ -78,7 +85,7 @@ namespace Pingpong
         public void CircleThis(PictureBox pic)
         {
             System.Drawing.Drawing2D.GraphicsPath gp = new System.Drawing.Drawing2D.GraphicsPath();
-            gp.AddEllipse(pic.Width/2, pic.Height/2, pic.Width, pic.Height);
+            gp.AddEllipse(0, 0, pic.Width, pic.Height);
             Region rg = new Region(gp);
             pic.Region = rg;
         }
