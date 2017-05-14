@@ -25,25 +25,59 @@ namespace Pingpong
         
         Player player;
         Player player2;
-        Game game;
+       Game game;
+        static void ShowChannelProperties(IChannelReceiver channel)
+        {
+            Console.WriteLine("Name: " + channel.ChannelName);
+            Console.WriteLine("Priority: " + channel.ChannelPriority);
+
+            ChannelDataStore data = (ChannelDataStore)channel.ChannelData;
+            if (data != null)
+            {
+                foreach (string uri in data.ChannelUris)
+                {
+                    Console.WriteLine("URI: " + uri);
+                }
+            }
+        }
+        public static void ShowWellKnownServiceTypes()
+
+        {
+
+            WellKnownServiceTypeEntry[] entries =
+
+                RemotingConfiguration.GetRegisteredWellKnownServiceTypes();
+
+            foreach (var entry in entries)
+
+            {
+
+                Console.WriteLine("Assembly: {0}", entry.AssemblyName);
+
+                Console.WriteLine("Mode: {0}", entry.Mode);
+
+                Console.WriteLine("URI: {0}", entry.ObjectUri);
+
+                Console.WriteLine("Type: {0}", entry.TypeName);
+
+            }
+
+        }
 
         public Form1()
         {
             InitializeComponent();
             this.KeyPreview = true;
-            //Dictionary<string, string> pro = new Dictionary<string, string>();
-            //pro["name"] = "TCP Channel Binary KEK";
-            //pro["priority"] = "17";
-            //pro["port"] = "9000";
-            //BinaryClientFormatterSinkProvider snkPrvd2 = new BinaryClientFormatterSinkProvider();
-            ////snkPrvd2.TypeFilterLevel = TypeFilterLevel.Full;
-            //TcpClientChannel Channel = new TcpClientChannel(pro, snkPrvd2);
-            //ChannelServices.RegisterChannel(Channel, false);
 
-            
             RemotingConfiguration.Configure("Pingpong.exe.config", false);
-            game = new Game();
-            //game = (Game)Activator.GetObject(typeof(Game), "tcp://localhost:9000/Game/Gameee");
+            ShowWellKnownServiceTypes();
+            foreach (var i in System.Runtime.Remoting.Channels.ChannelServices.RegisteredChannels)
+            {
+                Console.WriteLine(i.ChannelName, i);
+            }
+            Console.WriteLine("asdjfak");
+            //game = new Game();
+            game = (Game)Activator.GetObject(typeof(Game), "tcp://192.168.1.209:8000/Game/Gameee");
             player = game.Connect();
             player2 = game.Connect();
 
