@@ -98,12 +98,14 @@ namespace Pingpong
             {
                 pb_Ball.Invoke(new MethodInvoker(delegate { pb_Ball.Location = new Point(game.Ball.X, game.Ball.Y); }));
             }
-        }
+            if (InvokeRequired)
+            {
+                Invoke(new MethodInvoker(delegate {
+                    Text = String.Format("Ping Pong score: {0} - {1}", player.Score, player2.Score);
+                }));
+            }
 
-        // Это, вроде, для очков
-        PictureBox[] Score_Player = new PictureBox[5];  
-        PictureBox[] Score_Enemy = new PictureBox[5];   
-        Color ScoreColor = Color.Silver;
+        }
 
         public void PaintBox(int X, int Y, int W, int H, Color C)
         {
@@ -117,14 +119,14 @@ namespace Pingpong
         public void CircleThis(PictureBox pic)
         {
             System.Drawing.Drawing2D.GraphicsPath gp = new System.Drawing.Drawing2D.GraphicsPath();
-            gp.AddEllipse(pic.Width/2, pic.Height/2, pic.Width, pic.Height);
+            gp.AddEllipse(0, 0, pic.Width, pic.Height);
             Region rg = new Region(gp);
             pic.Region = rg;
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            switch (e.KeyCode)      //Regular key input, if press the right keys it moves in its direction
+            switch (e.KeyCode)   
             {
                 case Keys.Up:
                     player.ChangePosition("up");
@@ -138,91 +140,17 @@ namespace Pingpong
                 case Keys.S:
                     player2.ChangePosition("down");
                     break;
-                case Keys.Space:    //If hit space it starts the game,
+                case Keys.Space:    
                     game.SetStatus("playing");
+                    label_Start.Hide();
                     break;
             }
-        }
-
-        private void Form1_KeyUp(object sender, KeyEventArgs e)
-        {
-            
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             pb_Ball.Location = new Point(game.Ball.X, game.Ball.Y);
-            //CircleThis(pb_Ball);
-        }
-
-        public void AddScore(PictureBox[] Arr)
-        {
-            for (int i = 0; i < Arr.Length; i++)
-            {   //Goes through the entire array, checks where the first "non black" box is
-                if (Arr[i].BackColor == ScoreColor)
-                {   //And then changes it to black
-                    Arr[i].BackColor = Color.Black;
-                    break;
-                }
-            }
-
-            if (Arr[4].BackColor == Color.Black)
-            {   //If they all are black, game ends.
-                
-                label_Start.Visible = true;
-                RestoreScore();
-                pb_Ball.Location = new Point(208, 80);
-                pb_Player.Location = new Point(8, 67);
-                pb_Enemy.Location = new Point(409, 67);
-                
-                label_Time.Visible = false;
-            }
-        }
-
-        public void RestoreScore()
-        {
-            for (int i = 0; i <= 5; i++)
-            {   //Resets all the score boxes to their original color
-                //PicID(i).BackColor = ScoreColor;
-                //PicID(i, true).BackColor = ScoreColor;
-            }
+            CircleThis(pb_Ball);
         }  
-
-        //delete
-        private void timer_Enemy_Tick(object sender, EventArgs e)
-        {
-            return;
-            
-        }
-
-        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            return;
-            SettingsForm sF = new SettingsForm();
-            sF.Show();
-        }
-
-        private void timer_Sec_Tick(object sender, EventArgs e)
-        {
-            return;
-            //if (GameOn)
-            //{
-            //    Round++;
-            //    label_Time.Visible = true;
-
-            //    TimeSpan time = TimeSpan.FromSeconds(Round);
-
-            //    string str = time.ToString(@"mm\:ss");
-            //    label_Time.Text = "Time: " + str;
-            //}
-        }
-
-
-        private void timer_Moveball_Tick(object sender, EventArgs e)
-        {
-
-        }
-
-
     }
 }
