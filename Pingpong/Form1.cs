@@ -17,15 +17,15 @@ using System.Runtime.Serialization.Formatters;
 using gamelogic;
 using System.Runtime.Remoting.Channels.Http;
 using System.Runtime.Remoting.Lifetime;
+using System.Timers;
 
 namespace Pingpong
 {
     public partial class Form1 : Form
     {
-        
+        Game game;
         Player player;
-        Player player2;
-       Game game;
+
         static void ShowChannelProperties(IChannelReceiver channel)
         {
             Console.WriteLine("Name: " + channel.ChannelName);
@@ -75,47 +75,64 @@ namespace Pingpong
             {
                 Console.WriteLine(i.ChannelName, i);
             }
-            Console.WriteLine("asdjfak");
-            //game = new Game();
-            game = (Game)Activator.GetObject(typeof(Game), "tcp://192.168.1.209:8000/Game/Gameee");
-            player = game.Connect();
-            player2 = game.Connect();
 
-            game.UpdateInfoHandle += new UpdateInfoEvent(onUpdateInfo);
+            game = (Game)Activator.GetObject(typeof(Game), "tcp://localhost:8000/Game/Gameee");
+            player = game.Connect();
+
+            System.Timers.Timer TickTimer = new System.Timers.Timer(5);
+            TickTimer.Elapsed += onUpdateInfo;
+            TickTimer.AutoReset = true;
+            TickTimer.Enabled = true;
         }
 
-        private void onUpdateInfo(UpdateInfo updateInfo)
+        public void onUpdateInfo(Object source, ElapsedEventArgs e)
         {
             if (pb_Player.InvokeRequired)
             {
-                pb_Player.Invoke(new MethodInvoker(delegate { pb_Player.Location = new Point(player.X, player.Y); }));
+                if (game.getPlayer(0) != null)
+                {
+                    pb_Player.Invoke(new MethodInvoker(delegate { pb_Player.Location = new Point(game.getPlayer(0).X, game.getPlayer(0).Y); }));
+                }
             }
+
             if (pb_Enemy.InvokeRequired)
             {
-                pb_Enemy.Invoke(new MethodInvoker(delegate { pb_Enemy.Location = new Point(player2.X, player2.Y); }));
+                if (game.getPlayer(1) != null)
+                {
+                    pb_Enemy.Invoke(new MethodInvoker(delegate { pb_Enemy.Location = new Point(game.getPlayer(1).X, game.getPlayer(1).Y); }));
+                }
             }
+
             if (pb_Ball.InvokeRequired)
             {
                 pb_Ball.Invoke(new MethodInvoker(delegate { pb_Ball.Location = new Point(game.Ball.X, game.Ball.Y); }));
             }
-            if (InvokeRequired)
+
+            if (label_Start.InvokeRequired)
             {
-                Invoke(new MethodInvoker(delegate {
-                    Text = String.Format("Ping Pong score: {0} - {1}", player.Score, player2.Score);
+                label_Start.Invoke(new MethodInvoker(delegate {
+                    if (game.status != "playing")
+                    {
+                        label_Start.Show();
+                    } else
+                    {
+                        label_Start.Hide();
+                    }
                 }));
             }
 
+            if (InvokeRequired)
+            {
+                if (game.getPlayer(0) != null && game.getPlayer(1) != null)
+                {
+                    Invoke(new MethodInvoker(delegate
+                    {
+                        Text = String.Format("Ping Pong score: {0} - {1}", game.getPlayer(0).Score, game.getPlayer(1).Score);
+                    }));
+                }
+            }
         }
-
-        public void PaintBox(int X, int Y, int W, int H, Color C)
-        {
-            //PictureBox Temp = new PictureBox();
-            //Temp.BackColor = C;
-            //Temp.Size = new Size(W, H);
-            //Temp.Location = new Point(X-W/2, Y-H/2);
-            //WorldFrame.Controls.Add(Temp);
-        }
-
+        
         public void CircleThis(PictureBox pic)
         {
             System.Drawing.Drawing2D.GraphicsPath gp = new System.Drawing.Drawing2D.GraphicsPath();
@@ -134,15 +151,8 @@ namespace Pingpong
                 case Keys.Down:
                     player.ChangePosition("down");
                     break;
-                case Keys.W:
-                    player2.ChangePosition("up");
-                    break;
-                case Keys.S:
-                    player2.ChangePosition("down");
-                    break;
                 case Keys.Space:    
                     game.SetStatus("playing");
-                    label_Start.Hide();
                     break;
             }
         }
