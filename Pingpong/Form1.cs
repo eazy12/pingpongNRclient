@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
+using System.Runtime.Remoting.Channels.Tcp;
 using System.Drawing;
 using System.Windows.Forms;
 using gamelogic;
 using System.Timers;
+using System.Runtime.Remoting.Lifetime;
 
 namespace Pingpong
 {
@@ -12,12 +14,14 @@ namespace Pingpong
     {
         Game game;
         Player player;
+        private bool isGameHadStarted = false;
+        TcpChannel tcpChannel;
+        System.Timers.Timer TickTimer;
 
         static void ShowChannelProperties(IChannelReceiver channel)
         {
             Console.WriteLine("Name: " + channel.ChannelName);
             Console.WriteLine("Priority: " + channel.ChannelPriority);
-
             ChannelDataStore data = (ChannelDataStore)channel.ChannelData;
             if (data != null)
             {
@@ -37,12 +41,13 @@ namespace Pingpong
             foreach (var i in ChannelServices.RegisteredChannels)
             {
                 Console.WriteLine(i.ChannelName, i);
+                tcpChannel = (System.Runtime.Remoting.Channels.Tcp.TcpChannel)i;
             }
 
             game = (Game)Activator.GetObject(typeof(Game), "tcp://localhost:8000/Game/Gameee");
             player = game.Connect();
 
-            System.Timers.Timer TickTimer = new System.Timers.Timer(5);
+            TickTimer = new System.Timers.Timer(5);
             TickTimer.Elapsed += onUpdateInfo;
             TickTimer.AutoReset = true;
             TickTimer.Enabled = true;
@@ -50,50 +55,64 @@ namespace Pingpong
 
         public void onUpdateInfo(Object source, ElapsedEventArgs e)
         {
-            if (pb_Player.InvokeRequired)
+            try
             {
-                if (game.getPlayer(0) != null)
+                if (pb_Player.InvokeRequired)
                 {
-                    pb_Player.Invoke(new MethodInvoker(delegate { pb_Player.Location = new Point(game.getPlayer(0).X, game.getPlayer(0).Y); }));
-                }
-            }
-
-            if (pb_Enemy.InvokeRequired)
-            {
-                if (game.getPlayer(1) != null)
-                {
-                    pb_Enemy.Invoke(new MethodInvoker(delegate { pb_Enemy.Location = new Point(game.getPlayer(1).X, game.getPlayer(1).Y); }));
-                }
-            }
-
-            if (pb_Ball.InvokeRequired)
-            {
-                pb_Ball.Invoke(new MethodInvoker(delegate { pb_Ball.Location = new Point(game.Ball.X, game.Ball.Y); }));
-            }
-
-            if (label_Start.InvokeRequired)
-            {
-                label_Start.Invoke(new MethodInvoker(delegate {
-                    if (game.status != "playing")
+                    if (game.getPlayer(0) != null)
                     {
-                        label_Start.Show();
-                    } else
-                    {
-                        label_Start.Hide();
+                        pb_Player.Invoke(new MethodInvoker(delegate { pb_Player.Location = new Point(game.getPlayer(0).X, game.getPlayer(0).Y); }));
                     }
-                }));
-            }
+                }
 
-            if (InvokeRequired)
-            {
-                if (game.getPlayer(0) != null && game.getPlayer(1) != null)
+                if (pb_Enemy.InvokeRequired)
                 {
-                    Invoke(new MethodInvoker(delegate
+                    if (game.getPlayer(1) != null)
                     {
-                        Text = String.Format("Ping Pong score: {0} - {1}", game.getPlayer(0).Score, game.getPlayer(1).Score);
-                        Text = Text.PadLeft(65);
+                        pb_Enemy.Invoke(new MethodInvoker(delegate { pb_Enemy.Location = new Point(game.getPlayer(1).X, game.getPlayer(1).Y); }));
+                    }
+                }
+
+                if (pb_Ball.InvokeRequired)
+                {
+                    pb_Ball.Invoke(new MethodInvoker(delegate { pb_Ball.Location = new Point(game.Ball.X, game.Ball.Y); }));
+                }
+
+                if (label_Start.InvokeRequired)
+                {
+                    label_Start.Invoke(new MethodInvoker(delegate
+                    {
+                        if (game.status != "playing")
+                        {
+                            label_Start.Show();
+                        }
+                        else
+                        {
+                            label_Start.Hide();
+                        }
                     }));
                 }
+
+                if (InvokeRequired)
+                {
+                    if (game.getPlayer(0) != null && game.getPlayer(1) != null)
+                    {
+                        Invoke(new MethodInvoker(delegate
+                        {
+                            Text = String.Format("Ping Pong score: {0} - {1}", game.getPlayer(0).Score, game.getPlayer(1).Score);
+                            Text = Text.PadLeft(65);
+                        }));
+                    }
+                }
+            }
+            catch (System.Net.Sockets.SocketException ee)
+            {
+                tcpChannel.StopListening(8000);
+                TickTimer.Enabled = false;
+            }
+            catch
+            {
+                game.Disconnect(player);
             }
         }
         
@@ -115,8 +134,14 @@ namespace Pingpong
                 case Keys.Down:
                     player.ChangePosition("down");
                     break;
-                case Keys.Space:    
-                    game.SetStatus("playing");
+                case Keys.Space:
+                    if (!isGameHadStarted)
+                    {
+                        isGameHadStarted = true;
+                        game.SetStatus("playing");
+                    }
+
+
                     break;
             }
         }
@@ -125,6 +150,19 @@ namespace Pingpong
         {
             pb_Ball.Location = new Point(game.Ball.X, game.Ball.Y);
             CircleThis(pb_Ball);
-        }  
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            game.SetStatus("finish");
+            game.Disconnect(player);
+            ILease lease_1 = (ILease)game.GetLifetimeService();
+            Console.WriteLine(lease_1.CurrentLeaseTime);
+        }
+
+        private void WorldFrame_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

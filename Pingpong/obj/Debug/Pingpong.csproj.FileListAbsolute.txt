@@ -44,3 +44,4 @@ C:\Users\WorstOne\Source\theonlyoneclient\pingpongNRclient\Pingpong\obj\Debug\Pi
 C:\Users\WorstOne\Source\theonlyoneclient\pingpongNRclient\Pingpong\obj\Debug\Pingpong.csproj.GenerateResource.Cache
 C:\Users\WorstOne\Source\theonlyoneclient\pingpongNRclient\Pingpong\bin\Debug\gamelogic.dll
 C:\Users\WorstOne\Source\theonlyoneclient\pingpongNRclient\Pingpong\obj\Debug\Pingpong.csprojResolveAssemblyReference.cache
+C:\Users\WorstOne\Source\theonlyoneclient\pingpongNRclient\Pingpong\obj\Debug\Pingpong.Form2.resources
