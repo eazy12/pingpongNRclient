@@ -1,22 +1,9 @@
-﻿using RotatePictureBox;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
-using System.Runtime.Remoting.Channels.Tcp;
-using System.Runtime.Remoting.Channels.Ipc;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Pingpong.Properties;
-using System.Runtime.Serialization.Formatters;
 using gamelogic;
-using System.Runtime.Remoting.Channels.Http;
-using System.Runtime.Remoting.Lifetime;
 using System.Timers;
 
 namespace Pingpong
@@ -40,29 +27,6 @@ namespace Pingpong
                 }
             }
         }
-        public static void ShowWellKnownServiceTypes()
-
-        {
-
-            WellKnownServiceTypeEntry[] entries =
-
-                RemotingConfiguration.GetRegisteredWellKnownServiceTypes();
-
-            foreach (var entry in entries)
-
-            {
-
-                Console.WriteLine("Assembly: {0}", entry.AssemblyName);
-
-                Console.WriteLine("Mode: {0}", entry.Mode);
-
-                Console.WriteLine("URI: {0}", entry.ObjectUri);
-
-                Console.WriteLine("Type: {0}", entry.TypeName);
-
-            }
-
-        }
 
         public Form1()
         {
@@ -70,8 +34,7 @@ namespace Pingpong
             this.KeyPreview = true;
 
             RemotingConfiguration.Configure("Pingpong.exe.config", false);
-            ShowWellKnownServiceTypes();
-            foreach (var i in System.Runtime.Remoting.Channels.ChannelServices.RegisteredChannels)
+            foreach (var i in ChannelServices.RegisteredChannels)
             {
                 Console.WriteLine(i.ChannelName, i);
             }
