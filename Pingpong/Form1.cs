@@ -91,6 +91,7 @@ namespace Pingpong
                     Invoke(new MethodInvoker(delegate
                     {
                         Text = String.Format("Ping Pong score: {0} - {1}", game.getPlayer(0).Score, game.getPlayer(1).Score);
+                        Text = Text.PadLeft(65);
                     }));
                 }
             }
