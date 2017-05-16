@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Runtime.Remoting;
-using System.Runtime.Remoting.Channels;
-using System.Runtime.Remoting.Channels.Tcp;
 using System.Drawing;
 using System.Windows.Forms;
 using gamelogic;
@@ -14,8 +12,6 @@ namespace Pingpong
     {
         Game game;
         Player player;
-        private bool isGameHadStarted = false;
-        TcpChannel tcpChannel;
         System.Timers.Timer TickTimer;
 
         public Form1()
@@ -26,10 +22,13 @@ namespace Pingpong
                 this.KeyPreview = true;
 
                 RemotingConfiguration.Configure("Pingpong.exe.config", false);
-
-
+                
                 game = (Game)Activator.GetObject(typeof(Game), "tcp://localhost:8000/Game/Gameee");
                 player = game.Connect();
+
+                ILease lease_1 = (ILease)game.GetLifetimeService();
+                MyClientSponsor sponsor = new MyClientSponsor();
+                lease_1.Register(sponsor);
 
                 TickTimer = new System.Timers.Timer(5);
                 TickTimer.Elapsed += onUpdateInfo;
@@ -38,9 +37,8 @@ namespace Pingpong
             }
             catch (System.Net.Sockets.SocketException e)
             {
-                
-                label_Start.Location = new System.Drawing.Point(71, 217);
-                this.label_Start.Text = "Сервер не обнаружен. Нажмите ESC для выхода.";
+                label_Start.Location = new Point(71, 217);
+                label_Start.Text = "Сервер не обнаружен. Нажмите ESC для выхода.";
             }
         }
 
@@ -98,7 +96,6 @@ namespace Pingpong
             }
             catch (System.Net.Sockets.SocketException ee)
             {
-                Console.WriteLine("Here");
                 TickTimer.Enabled = false;
                 TickTimer.AutoReset = false;
             }
@@ -147,7 +144,6 @@ namespace Pingpong
                             Close();
                         }
                         break;
-
                 }
             }
             catch
@@ -155,7 +151,6 @@ namespace Pingpong
                 Console.WriteLine("Here1");
                 Close();
             }
-
         }
  
         private void Form1_Load(object sender, EventArgs e)
@@ -173,9 +168,25 @@ namespace Pingpong
             }
         }
 
-        private void WorldFrame_Paint(object sender, PaintEventArgs e)
-        {
+    }
 
+    public class MyClientSponsor : MarshalByRefObject, ISponsor
+    {
+        private DateTime lastRenewal;
+
+        public MyClientSponsor()
+        {
+            Console.WriteLine("MyClientSponsor.ctor called");
+            lastRenewal = DateTime.Now;
+        }
+
+        public TimeSpan Renewal(ILease lease)
+        {
+            Console.WriteLine("I've been asked to renew the lease.");
+            Console.WriteLine("Time since last renewal:" + (DateTime.Now - lastRenewal).ToString());
+
+            lastRenewal = DateTime.Now;
+            return TimeSpan.FromSeconds(20);
         }
     }
 }
