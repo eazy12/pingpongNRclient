@@ -18,39 +18,30 @@ namespace Pingpong
         TcpChannel tcpChannel;
         System.Timers.Timer TickTimer;
 
-        static void ShowChannelProperties(IChannelReceiver channel)
-        {
-            Console.WriteLine("Name: " + channel.ChannelName);
-            Console.WriteLine("Priority: " + channel.ChannelPriority);
-            ChannelDataStore data = (ChannelDataStore)channel.ChannelData;
-            if (data != null)
-            {
-                foreach (string uri in data.ChannelUris)
-                {
-                    Console.WriteLine("URI: " + uri);
-                }
-            }
-        }
-
         public Form1()
         {
-            InitializeComponent();
-            this.KeyPreview = true;
-
-            RemotingConfiguration.Configure("Pingpong.exe.config", false);
-            foreach (var i in ChannelServices.RegisteredChannels)
+            try
             {
-                Console.WriteLine(i.ChannelName, i);
-                tcpChannel = (System.Runtime.Remoting.Channels.Tcp.TcpChannel)i;
+                InitializeComponent();
+                this.KeyPreview = true;
+
+                RemotingConfiguration.Configure("Pingpong.exe.config", false);
+
+
+                game = (Game)Activator.GetObject(typeof(Game), "tcp://localhost:8000/Game/Gameee");
+                player = game.Connect();
+
+                TickTimer = new System.Timers.Timer(5);
+                TickTimer.Elapsed += onUpdateInfo;
+                TickTimer.AutoReset = true;
+                TickTimer.Enabled = true;
             }
-
-            game = (Game)Activator.GetObject(typeof(Game), "tcp://localhost:8000/Game/Gameee");
-            player = game.Connect();
-
-            TickTimer = new System.Timers.Timer(5);
-            TickTimer.Elapsed += onUpdateInfo;
-            TickTimer.AutoReset = true;
-            TickTimer.Enabled = true;
+            catch (System.Net.Sockets.SocketException e)
+            {
+                
+                label_Start.Location = new System.Drawing.Point(71, 217);
+                this.label_Start.Text = "Сервер не обнаружен. Нажмите ESC для выхода.";
+            }
         }
 
         public void onUpdateInfo(Object source, ElapsedEventArgs e)
@@ -107,8 +98,9 @@ namespace Pingpong
             }
             catch (System.Net.Sockets.SocketException ee)
             {
-                tcpChannel.StopListening(8000);
+                Console.WriteLine("Here");
                 TickTimer.Enabled = false;
+                TickTimer.AutoReset = false;
             }
             catch
             {
@@ -126,26 +118,46 @@ namespace Pingpong
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            switch (e.KeyCode)   
+            try
             {
-                case Keys.Up:
-                    player.ChangePosition("up");
-                    break;
-                case Keys.Down:
-                    player.ChangePosition("down");
-                    break;
-                case Keys.Space:
-                    if (!isGameHadStarted)
-                    {
-                        isGameHadStarted = true;
-                        game.SetStatus("playing");
-                    }
+                switch (e.KeyCode)
+                {
+                    case Keys.Up:
+                        player.ChangePosition("up");
+                        break;
+                    case Keys.Down:
+                        player.ChangePosition("down");
+                        break;
+                    case Keys.Space:
+                        if (game.getPlayer(1) == null)
+                        {
+                            game.SetStatus("waiting2player");
+                            this.label_Start.Text = "Второй игрок не подключен";
+                            this.label_Start.Visible = true;
+                        }
+                        else
+                        {
+                            game.SetStatus("playing");
+                            this.label_Start.Visible = false;
+                        }
+                        break;
+                    default:
+                        if(this.label_Start.Text == "Сервер не обнаружен. Нажмите ESC для выхода.")
+                        {
+                            Close();
+                        }
+                        break;
 
-
-                    break;
+                }
             }
-        }
+            catch
+            {
+                Console.WriteLine("Here1");
+                Close();
+            }
 
+        }
+ 
         private void Form1_Load(object sender, EventArgs e)
         {
             pb_Ball.Location = new Point(game.Ball.X, game.Ball.Y);
@@ -154,10 +166,11 @@ namespace Pingpong
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            game.SetStatus("finish");
-            game.Disconnect(player);
-            ILease lease_1 = (ILease)game.GetLifetimeService();
-            Console.WriteLine(lease_1.CurrentLeaseTime);
+            if (this.label_Start.Text != "Сервер не обнаружен. Нажмите ESC для выхода.")
+            {
+                game.SetStatus("finish");
+                game.Disconnect(player);
+            }
         }
 
         private void WorldFrame_Paint(object sender, PaintEventArgs e)
