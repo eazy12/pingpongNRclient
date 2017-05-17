@@ -139,6 +139,9 @@ namespace Pingpong
                                 TickTimer.Elapsed += onUpdateInfo;
                                 TickTimer.AutoReset = true;
                                 TickTimer.Enabled = true;
+
+                                pb_Ball.Location = new Point(game.Ball.X, game.Ball.Y);
+                                CircleThis(pb_Ball);
                             }
                        
                         isFirstHitSpace = false;
@@ -180,8 +183,6 @@ namespace Pingpong
  
         private void Form1_Load(object sender, EventArgs e)
         {
-            pb_Ball.Location = new Point(game.Ball.X, game.Ball.Y);
-            CircleThis(pb_Ball);
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
