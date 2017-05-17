@@ -45,10 +45,11 @@ namespace Pingpong
                 if (pb_Player.InvokeRequired)
                 {
                     if (game.getPlayer(0) != null)
-                    {
+                   {
                         pb_Player.Invoke(new MethodInvoker(delegate { pb_Player.Location = new Point(game.getPlayer(0).X, game.getPlayer(0).Y); }));
                     }
                 }
+               
 
                 if (pb_Enemy.InvokeRequired)
                 {
@@ -85,7 +86,7 @@ namespace Pingpong
                         Invoke(new MethodInvoker(delegate
                         {
                             Text = String.Format("Ping Pong score: {0} - {1}", game.getPlayer(0).Score, game.getPlayer(1).Score);
-                            Text = Text.PadLeft(65);
+                            //Text = Text.PadLeft(65);
                         }));
                     }
                 }
