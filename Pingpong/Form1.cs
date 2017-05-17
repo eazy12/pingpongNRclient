@@ -14,6 +14,8 @@ namespace Pingpong
         Player player;
         System.Timers.Timer TickTimer;
 
+        bool isFirstHitSpace = true;
+
         public Form1()
         {
             try
@@ -22,18 +24,11 @@ namespace Pingpong
                 this.KeyPreview = true;
 
                 RemotingConfiguration.Configure("Pingpong.exe.config", false);
-                
-                game = (Game)Activator.GetObject(typeof(Game), "tcp://localhost:8000/Game/Gameee");
-                player = game.Connect();
 
-                ILease lease_1 = (ILease)game.GetLifetimeService();
-                MyClientSponsor sponsor = new MyClientSponsor();
-                lease_1.Register(sponsor);
+                //ILease lease_1 = (ILease)game.GetLifetimeService();
+                //MyClientSponsor sponsor = new MyClientSponsor();
+                //lease_1.Register(sponsor);
 
-                TickTimer = new System.Timers.Timer(5);
-                TickTimer.Elapsed += onUpdateInfo;
-                TickTimer.AutoReset = true;
-                TickTimer.Enabled = true;
             }
             catch (System.Net.Sockets.SocketException e)
             {
@@ -44,6 +39,7 @@ namespace Pingpong
 
         public void onUpdateInfo(Object source, ElapsedEventArgs e)
         {
+            
             try
             {
                 if (pb_Player.InvokeRequired)
@@ -120,12 +116,33 @@ namespace Pingpong
                 switch (e.KeyCode)
                 {
                     case Keys.Up:
-                        player.ChangePosition("up");
+                        if (!isFirstHitSpace)
+                        {
+                            player.ChangePosition("up");
+                        }
                         break;
                     case Keys.Down:
-                        player.ChangePosition("down");
+                        if (!isFirstHitSpace)
+                        {
+                            player.ChangePosition("down");
+                        }
                         break;
                     case Keys.Space:
+                        try
+                        {
+                            if (isFirstHitSpace)
+                            {
+                                game = (Game)Activator.GetObject(typeof(Game), "tcp://" + FormConnection.GetAddress() + ":8000/Game/Gameee");
+                                Console.WriteLine(FormConnection.GetAddress() );
+                                player = game.Connect(FormNickname.GetNickName());
+                                TickTimer = new System.Timers.Timer(5);
+                                TickTimer.Elapsed += onUpdateInfo;
+                                TickTimer.AutoReset = true;
+                                TickTimer.Enabled = true;
+                            }
+                       
+                        isFirstHitSpace = false;
+                        
                         if (game.getPlayer(1) == null)
                         {
                             game.SetStatus("waiting2player");
@@ -134,11 +151,19 @@ namespace Pingpong
                         }
                         else
                         {
+                            menuStrip1.Visible = false;
                             game.SetStatus("playing");
                             this.label_Start.Visible = false;
                         }
+                        
+                        }
+                        catch
+                        {
+                            Console.WriteLine(isFirstHitSpace);
+                            label_Start.Text = "Сервер не обнаружен. Нажмите ESC для выхода.";
+                        }
                         break;
-                    default:
+                    case Keys.Escape:
                         if(this.label_Start.Text == "Сервер не обнаружен. Нажмите ESC для выхода.")
                         {
                             Close();
@@ -148,7 +173,7 @@ namespace Pingpong
             }
             catch
             {
-                Console.WriteLine("Here1");
+                Console.WriteLine(isFirstHitSpace);
                 Close();
             }
         }
@@ -167,6 +192,19 @@ namespace Pingpong
                 game.Disconnect(player);
             }
         }
+
+        private void подключениеToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormConnection form4 = new FormConnection();
+            form4.ShowDialog();
+        }
+
+        private void имяИгрокаToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormNickname form5 = new FormNickname();
+            form5.ShowDialog();
+        }
+
 
     }
 
@@ -189,4 +227,7 @@ namespace Pingpong
             return TimeSpan.FromSeconds(20);
         }
     }
+
+
+
 }

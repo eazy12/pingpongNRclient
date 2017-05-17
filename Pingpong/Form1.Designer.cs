@@ -34,16 +34,22 @@
             this.pb_Ball = new System.Windows.Forms.PictureBox();
             this.pb_Enemy = new System.Windows.Forms.PictureBox();
             this.pb_Player = new System.Windows.Forms.PictureBox();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.ghbToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.подключениеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.имяИгрокаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.timer_Moveball = new System.Windows.Forms.Timer(this.components);
             this.timer_Enemy = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label_Start = new System.Windows.Forms.Label();
             this.timer_Sec = new System.Windows.Forms.Timer(this.components);
+            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.WorldFrame.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Ball)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Enemy)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Player)).BeginInit();
+            this.menuStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -53,6 +59,7 @@
             this.WorldFrame.Controls.Add(this.pb_Ball);
             this.WorldFrame.Controls.Add(this.pb_Enemy);
             this.WorldFrame.Controls.Add(this.pb_Player);
+            this.WorldFrame.Controls.Add(this.menuStrip1);
             this.WorldFrame.Dock = System.Windows.Forms.DockStyle.Top;
             this.WorldFrame.Location = new System.Drawing.Point(0, 0);
             this.WorldFrame.Name = "WorldFrame";
@@ -86,6 +93,39 @@
             this.pb_Player.TabIndex = 0;
             this.pb_Player.TabStop = false;
             // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ghbToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(427, 24);
+            this.menuStrip1.TabIndex = 3;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // ghbToolStripMenuItem
+            // 
+            this.ghbToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.подключениеToolStripMenuItem,
+            this.имяИгрокаToolStripMenuItem});
+            this.ghbToolStripMenuItem.Name = "ghbToolStripMenuItem";
+            this.ghbToolStripMenuItem.Size = new System.Drawing.Size(79, 20);
+            this.ghbToolStripMenuItem.Text = "Настройки";
+            // 
+            // подключениеToolStripMenuItem
+            // 
+            this.подключениеToolStripMenuItem.Name = "подключениеToolStripMenuItem";
+            this.подключениеToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.подключениеToolStripMenuItem.Text = "Подключение";
+            this.подключениеToolStripMenuItem.Click += new System.EventHandler(this.подключениеToolStripMenuItem_Click);
+            // 
+            // имяИгрокаToolStripMenuItem
+            // 
+            this.имяИгрокаToolStripMenuItem.Name = "имяИгрокаToolStripMenuItem";
+            this.имяИгрокаToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.имяИгрокаToolStripMenuItem.Text = "Имя игрока";
+            this.имяИгрокаToolStripMenuItem.Click += new System.EventHandler(this.имяИгрокаToolStripMenuItem_Click);
+            // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(40, 40);
@@ -109,6 +149,11 @@
             this.label_Start.TabIndex = 14;
             this.label_Start.Text = "Press Space to Start";
             // 
+            // contextMenuStrip2
+            // 
+            this.contextMenuStrip2.Name = "contextMenuStrip2";
+            this.contextMenuStrip2.Size = new System.Drawing.Size(61, 4);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -120,15 +165,19 @@
             this.Controls.Add(this.WorldFrame);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Ping pong";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.WorldFrame.ResumeLayout(false);
+            this.WorldFrame.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Ball)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Enemy)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Player)).EndInit();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -147,6 +196,11 @@
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.Label label_Start;
         private System.Windows.Forms.Timer timer_Sec;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem ghbToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem подключениеToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem имяИгрокаToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
     }
 }
 
