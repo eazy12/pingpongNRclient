@@ -39,7 +39,6 @@ namespace Pingpong
 
         public void onUpdateInfo(Object source, ElapsedEventArgs e)
         {
-            
             try
             {
                 if (pb_Player.InvokeRequired)
@@ -74,6 +73,21 @@ namespace Pingpong
                         else
                         {
                             label_Start.Hide();
+                        }
+                    }));
+                }
+
+                if (menuStrip1.InvokeRequired)
+                {
+                    menuStrip1.Invoke(new MethodInvoker(delegate
+                    {
+                        if (game.status != "playing")
+                        {
+                            menuStrip1.Show();
+                        }
+                        else
+                        {
+                            menuStrip1.Hide();
                         }
                     }));
                 }
@@ -147,13 +161,10 @@ namespace Pingpong
                         {
                             game.SetStatus("waiting2player");
                             this.label_Start.Text = "Второй игрок не подключен";
-                            this.label_Start.Visible = true;
                         }
                         else
                         {
-                            menuStrip1.Visible = false;
                             game.SetStatus("playing");
-                            this.label_Start.Visible = false;
                         }
                         
                         }
@@ -204,7 +215,6 @@ namespace Pingpong
             FormNickname form5 = new FormNickname();
             form5.ShowDialog();
         }
-
 
     }
 
