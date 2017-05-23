@@ -43,18 +43,20 @@ namespace Pingpong
             {
                 if (pb_Player.InvokeRequired)
                 {
-                    if (game.getPlayer(0) != null)
+                    Player pl = game.getPlayer(0);
+                    if (pl != null)
                    {
-                        pb_Player.Invoke(new MethodInvoker(delegate { pb_Player.Location = new Point(game.getPlayer(0).X, game.getPlayer(0).Y); }));
+                        pb_Player.Invoke(new MethodInvoker(delegate { pb_Player.Location = new Point(pl.X, pl.Y); }));
                     }
                 }
                
 
                 if (pb_Enemy.InvokeRequired)
                 {
-                    if (game.getPlayer(1) != null)
+                    Player pl = game.getPlayer(1);
+                    if (pl != null)
                     {
-                        pb_Enemy.Invoke(new MethodInvoker(delegate { pb_Enemy.Location = new Point(game.getPlayer(1).X, game.getPlayer(1).Y); }));
+                        pb_Enemy.Invoke(new MethodInvoker(delegate { pb_Enemy.Location = new Point(pl.X, pl.Y); }));
                     }
                 }
 
@@ -95,11 +97,14 @@ namespace Pingpong
 
                 if (InvokeRequired)
                 {
-                    if (game.getPlayer(0) != null && game.getPlayer(1) != null)
+                    Player pl1 = game.getPlayer(0);
+                    Player pl2 = game.getPlayer(1);
+
+                    if (pl1 != null && pl2 != null)
                     {
                         Invoke(new MethodInvoker(delegate
                         {
-                            Text = String.Format("Ping Pong score: {0} - {1}", game.getPlayer(0).Score, game.getPlayer(1).Score);
+                            Text = String.Format("Ping Pong score: {0} - {1}", pl1.Score, pl2.Score);
                             //Text = Text.PadLeft(65);
                         }));
                     }
